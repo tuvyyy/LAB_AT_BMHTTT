@@ -11,7 +11,7 @@
 
 ## Video thực hành
 
-YouTube: **[DÁN LINK VIDEO SAU KHI UPLOAD]**
+YouTube: **https://youtu.be/T3X7XK6T0iY**
 
 ## Môi trường thực hành
 
