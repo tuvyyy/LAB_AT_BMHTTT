@@ -1,152 +1,110 @@
 # LAB 4 - Khảo sát và đánh giá bề mặt mạng bằng Nmap
 
-## 1. Thông tin sinh viên
+## Thông tin sinh viên
 - Họ và tên: Nguyễn Ngọc Tú Vy
 - MSSV: 1150070050
+- Lớp: 11_DH_TMDT
 - Môn học: An toàn hệ thống thông tin
-- Bài thực hành: LAB 4 - Khảo sát và đánh giá bề mặt mạng bằng Nmap
 
-## 2. Môi trường thực hành
-- Máy ảo hóa: VMware Workstation
-- Kali Linux: Kali Linux 2026.2
-- Máy quét: Kali Linux
-- Máy đích: Metasploitable 2
-- Kiểu mạng: Host-only
-- Kali IP: 192.168.239.131/24
-- Metasploitable 2 IP: 192.168.239.130/24
-
-## 3. Mục tiêu
-- Xác định các host đang hoạt động trong mạng Host-only.
-- Khảo sát các cổng TCP/UDP.
-- So sánh các kỹ thuật TCP Connect, SYN, FIN, Xmas, NULL và ACK scan.
-- Nhận diện dịch vụ và phiên bản bằng Nmap.
-- Nhận diện hệ điều hành.
-- Thực hiện một số NSE script trên dịch vụ SMB.
-- Xuất kết quả quét để lưu hồ sơ bằng chứng.
-
-## 4. Các tình huống đã thực hiện
-
-### 4.1. Kiểm tra kết nối
-Kali Linux và Metasploitable 2 được cấu hình cùng mạng Host-only.
-
-Kết quả:
-- Kali: 192.168.239.131/24
+## Môi trường thực hành
+- VMware Workstation
+- Kali Linux 2026.2
+- Metasploitable 2
+- Nmap 7.99
+- Mạng thực hành: Host-only
+- Kali Linux: 192.168.239.131/24
 - Metasploitable 2: 192.168.239.130/24
-- Ping: PASS, 0% packet loss
 
-### 4.2. Host Discovery
-Đã thực hiện host discovery trên dải mạng 192.168.239.0/24.
+## Cách dựng môi trường
+1. Import Kali Linux và Metasploitable 2 vào VMware Workstation.
+2. Cấu hình cả hai máy ảo sử dụng Host-only.
+3. Metasploitable 2 chỉ sử dụng Host-only, không sử dụng Bridged.
+4. Xác định IP thực tế của từng VM.
+5. Kiểm tra kết nối Kali -> Metasploitable 2 trước khi thực hiện Nmap.
 
-Kết quả:
-- 192.168.239.1
-- 192.168.239.130 - Metasploitable 2
-- 192.168.239.131 - Kali Linux
-- 192.168.239.254
+## Các tình huống đã thực hiện
 
-Trạng thái: PASS
+### Host Discovery
+- Quét mạng Host-only.
+- Phát hiện 4 host đang hoạt động.
+- Trạng thái: PASS.
 
-### 4.3. TCP Connect Scan
-Kết quả:
-- 23 cổng open
-- 977 cổng closed
-- 0 cổng filtered
+### TCP Connect Scan
+- 23 cổng open.
+- 977 cổng closed.
+- Trạng thái: PASS.
 
-Trạng thái: PASS
+### SYN Scan
+- 23 cổng open.
+- 977 cổng closed.
+- Trạng thái: PASS.
 
-### 4.4. SYN Scan
-Kết quả:
-- 23 cổng open
-- 977 cổng closed
-- 0 cổng filtered
+### FIN / Xmas / NULL Scan
+- Các cổng dịch vụ xuất hiện ở trạng thái open|filtered.
+- Không đồng nhất open|filtered với open.
+- Trạng thái: PASS.
 
-Trạng thái: PASS
+### ACK Scan
+- 1000 cổng được xác định unfiltered.
+- ACK scan được dùng để quan sát chính sách lọc.
+- Trạng thái: PASS.
 
-### 4.5. FIN / Xmas / NULL Scan
-Các kỹ thuật FIN, Xmas và NULL cho kết quả tương tự:
-- 23 cổng open|filtered
-- 977 cổng closed
+### UDP Scan
+- 53/udp: open - domain.
+- 137/udp: open - netbios-ns.
+- Một số cổng khác ở trạng thái open|filtered.
+- Trạng thái: PASS.
 
-Lưu ý: open|filtered không đồng nghĩa chắc chắn cổng đang mở.
-
-Trạng thái: PASS
-
-### 4.6. ACK Scan
-Kết quả:
-- 1000 cổng unfiltered
-
-ACK scan được dùng để quan sát chính sách lọc, không dùng để khẳng định cổng open.
-
-Trạng thái: PASS
-
-### 4.7. UDP Scan
-Quét 20 UDP port phổ biến.
-
-Kết quả nổi bật:
-- 53/udp open - domain
-- 137/udp open - netbios-ns
-- Một số cổng ở trạng thái open|filtered.
-
-Trạng thái: PASS
-
-### 4.8. Service Version Detection
+### Service Version Detection
 Một số dịch vụ phát hiện được:
-- 21/tcp - vsftpd 2.3.4
-- 22/tcp - OpenSSH 4.7p1
-- 80/tcp - Apache httpd 2.2.8
-- 445/tcp - Samba
-- 3306/tcp - MySQL 5.0.51a
-- 5432/tcp - PostgreSQL
-- 5900/tcp - VNC
-- 6667/tcp - UnrealIRCd
-- 8180/tcp - Apache Tomcat
+- FTP: vsftpd 2.3.4
+- SSH: OpenSSH 4.7p1
+- HTTP: Apache httpd 2.2.8
+- SMB: Samba
+- MySQL: 5.0.51a
+- PostgreSQL
+- VNC
+- UnrealIRCd
+- Apache Tomcat
 
-Trạng thái: PASS
+Trạng thái: PASS.
 
-### 4.9. OS Detection
-Nmap nhận diện:
-- Device type: general purpose
-- Running: Linux 2.6.X
-- OS details: Linux 2.6.9 - 2.6.33
-- Network Distance: 1 hop
+### OS Detection
+- Device type: general purpose.
+- Running: Linux 2.6.X.
+- OS details: Linux 2.6.9 - 2.6.33.
+- Network Distance: 1 hop.
+- Trạng thái: PASS.
 
-Trạng thái: PASS
-
-### 4.10. NSE SMB
-NSE smb-os-discovery phát hiện:
+### NSE SMB
+smb-os-discovery phát hiện:
 - OS: Unix
 - Samba: 3.0.20-Debian
 - Computer name: metasploitable
 - Domain: localdomain
-- FQDN: metasploitable.localdomain
 
-Kiểm tra smb-vuln-ms17-010 không trả về trạng thái VULNERABLE, vì vậy không đủ cơ sở kết luận mục tiêu dễ bị ảnh hưởng hoặc đã an toàn.
+Kiểm tra smb-vuln-ms17-010 không trả về trạng thái VULNERABLE.
+Không đủ bằng chứng để kết luận hệ thống dễ bị ảnh hưởng hoặc đã được vá.
 
-Trạng thái: PASS
+Trạng thái: PASS.
 
-## 5. Lỗi gặp phải và cách khắc phục
+## Output
+Các file kết quả Nmap:
+- `ket_qua.txt`
+- `ket_qua.xml`
+- `smb.txt`
 
-### Lỗi 1: Quên mật khẩu Kali
-Cách khắc phục:
-- Khởi động vào GRUB.
-- Chỉnh boot entry để vào root shell.
-- Đặt lại mật khẩu tài khoản kali.
-- Khởi động lại VM.
+## Lỗi gặp phải và cách khắc phục
 
-Kết quả: Khắc phục thành công.
+### Quên mật khẩu Kali
+Đã sử dụng GRUB để vào môi trường khôi phục và đặt lại mật khẩu tài khoản Kali.
 
-### Lỗi 2: Gõ nhầm ipconfig trên Metasploitable
-Nguyên nhân:
-Metasploitable là Linux nên không sử dụng lệnh ipconfig của Windows.
+Kết quả: PASS.
 
-Cách khắc phục:
-Sử dụng ifconfig.
+### Gõ nhầm lệnh ipconfig trên Metasploitable 2
+Metasploitable 2 sử dụng Linux nên lệnh phù hợp là `ifconfig`.
 
-Kết quả: Khắc phục thành công.
+Kết quả: PASS.
 
-## 6. Kết quả
-Môi trường Host-only hoạt động ổn định. Kali có thể phát hiện, quét và thu thập thông tin từ Metasploitable 2. Các kỹ thuật Nmap trong phạm vi LAB4 đã được thực hiện thành công.
-
-## 7. Tài liệu minh chứng
-Ảnh chụp và file output được lưu trong:
-- `images/`
-- `output/`
+## Ghi chú an toàn
+Toàn bộ hoạt động quét được thực hiện trong mạng VMware Host-only trên các máy ảo thuộc môi trường thực hành của sinh viên. Không thực hiện quét hệ thống bên ngoài.
