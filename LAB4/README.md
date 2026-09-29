@@ -11,7 +11,7 @@
 
 ## 2. Video và báo cáo
 
-- Video YouTube: [CẬP NHẬT LINK VIDEO]
+- Video YouTube: https://youtu.be/yTh5V44_z6c
 - GitHub Public: https://github.com/tuvyyy/LAB_AT_BMHTTT
 - Thư mục LAB4: https://github.com/tuvyyy/LAB_AT_BMHTTT/tree/main/LAB4
 - Báo cáo: `11_DH_TMDT-LAB4_1150070050-NguyenNgocTuVy.docx`
