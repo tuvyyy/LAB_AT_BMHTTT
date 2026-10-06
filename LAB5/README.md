@@ -10,4 +10,4 @@ Thực hành cấu hình pfSense Firewall với WAN, LAN và DMZ.
 - Scenario 4: Port Forward
 - Scenario 5: Firewall Logging
 
-> README sẽ được cập nhật sau khi hoàn tất toàn bộ bài lab.
+Link youtube: https://youtu.be/72Aq50-34AA
