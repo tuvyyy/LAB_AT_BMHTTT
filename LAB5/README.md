@@ -7,6 +7,7 @@
 **Ngày thực hành:** 06/10/2026  
 **Nền tảng ảo hóa:** VMware Workstation  
 **Firewall:** pfSense CE 2.7.2-RELEASE (amd64)
+Link: https://youtu.be/72Aq50-34AA
 
 ---
 
