@@ -73,7 +73,7 @@
 - [ ] Bằng chứng và phân tích kết quả kịch bản 1–4.
 - [ ] AD DS + DNS, user `sv_a`, `sv_b`, service account LDAP; Diagnostics → Authentication.
 - [ ] Captive Portal, Alias, Schedule; các ảnh test cần thiết.
-- [ ] Bảng kết quả, 12 câu hỏi phân tích theo đề, ảnh và video minh chứng.
+- [ ] Bảng kết quả, 12 câu hỏi phân tích theo đề và ảnh minh chứng.
 - [ ] Xuất `config.xml` cuối cùng; **không tải lên bản config chứa thông tin nhạy cảm ở repo công khai nếu chưa xử lý an toàn**.
 - [ ] Tải báo cáo Word hoàn chỉnh vào thư mục này khi đã sẵn sàng.
 
