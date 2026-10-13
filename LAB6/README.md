@@ -1,93 +1,92 @@
-# LAB 6 — Xác thực Active Directory và chính sách truy cập trên pfSense
+# LAB 6 – Cấu hình chính sách truy cập trên pfSense
 
-> **Bản tổng hợp đang hoàn thiện** — cập nhật theo phần thực hành đã có minh chứng ngày 13/10/2026.  
-> **Phạm vi thầy yêu cầu:** thực hiện **5 kịch bản (1–5)**; **không thực hiện độc lập kịch bản 6 và 7**. Các mục LDAP, Captive Portal, Alias, Schedule và các log cần thiết vẫn thuộc mục tiêu của LAB 6.
+**Môn học:** An toàn hệ thống thông tin  
+**Sinh viên:** Nguyễn Ngọc Tú Vy – 1150070050 – 11_DH_TMDT  
+**Ngày thực hành:** 13/10/2026
 
-## Thông tin sinh viên
+## 1. Nội dung thực hành
 
-| Mục | Nội dung |
-|---|---|
-| Họ và tên | Nguyễn Ngọc Tú Vy |
-| MSSV | 1150070050 |
-| Lớp | 11_DH_TMDT |
-| Môn học | An toàn hệ thống thông tin |
-| Công cụ | VMware Workstation, pfSense CE 2.7.2, Windows Lab, Ubuntu Server 24.04.5 |
-| Thời gian thực hành ghi nhận | 13/10/2026 |
+Trong LAB 6, em dựng mô hình pfSense trên VMware Workstation, chia thành bốn mạng WAN, MGMT, LAN và DMZ. Sau khi cấu hình địa chỉ IP cho các máy, em tạo Alias, Schedule và Firewall Rules để kiểm tra chính sách truy cập website theo từng máy và theo thời gian.
 
-## 1. Mục tiêu LAB 6
+Phần kiểm thử tập trung vào **5 kịch bản (KB1–KB5)**. Em sử dụng Windows Lab làm Client-A và Ubuntu Server làm web server trong DMZ. Kết quả trong README được ghi theo các ảnh đã chụp; những phép thử chưa thực hiện được ghi riêng ở cuối.
 
-- Dựng môi trường pfSense riêng với **WAN / MGMT / LAN / DMZ**.
-- Tích hợp **Active Directory qua LDAP**, kiểm tra bằng **Diagnostics → Authentication**.
-- Cấu hình **Captive Portal trên LAN**, xác thực bằng tài khoản domain.
-- Tạo **Firewall Alias** cho máy trạm và nhóm website mô phỏng trong DMZ.
-- Áp dụng **Firewall Schedule** theo giờ nghỉ / giờ hành chính.
-- Thực hành **5 kịch bản** chính sách truy cập, ưu tiên kiểm chứng đầy đủ **kịch bản 5 (DMZ ↔ LAN)**.
-- Dùng Firewall Log và trạng thái kết nối để chứng minh chính sách; lưu ý rule pfSense chuẩn khớp theo **IP/port/interface/schedule**, không dùng username LDAP làm Source trực tiếp.
+## 2. Mô hình mạng
 
-## 2. Mô hình mạng đã triển khai
-
-| Thành phần | VMware / interface | IP/mạng | Vai trò |
-|---|---|---|---|
-| pfSense WAN | VMnet8 / em0 | DHCP, 192.168.195.131/24 tại lúc chụp | WAN/NAT |
-| pfSense MGMT | VMnet4 / em1 | 192.168.56.254/24 | Quản trị WebGUI |
-| Máy thật | VMware VMnet4 | 192.168.56.1/24 | Máy quản trị |
-| pfSense LAN | VMnet5 / em2 | 10.6.0.1/24 | Gateway LAN |
-| Windows Lab — Client-A | VMnet5 | 10.6.0.21/24 | Máy thử chính sách |
-| pfSense DMZ | VMnet6 / em3 | 172.16.6.1/24 | Gateway DMZ |
-| Ubuntu Server — DMZ-WEB | VMnet6 / ens33 | 172.16.6.10/24 | Máy chủ web test |
-| Domain Controller (theo đề) | LAN | 10.6.0.10/24 | AD DS + DNS, **chưa có minh chứng hoàn thành trong bản này** |
-| Client-B (theo đề) | LAN | 10.6.0.22/24 | **Chưa có minh chứng hoàn thành trong bản này** |
-
-**Lưu ý:** WAN dùng VMnet8 NAT hiện có nên khác subnet WAN ví dụ trong tài liệu LAB6; các subnet MGMT/LAN/DMZ bám theo đề.
-
-## 3. Phần đã thực hiện và có minh chứng
-
-- [x] Thiết lập VMnet4 (MGMT), VMnet5 (LAN), VMnet6 (DMZ), giữ nguyên mạng của LAB cũ.
-- [x] Full Clone máy pfSense, reset cấu hình LAB cũ, gán 4 interface và địa chỉ IP LAB6.
-- [x] Hoàn thành Setup Wizard, đặt hostname `pfsense-lab6`, domain `lab6.test`, múi giờ `Asia/Ho_Chi_Minh`.
-- [x] Quản trị qua `https://192.168.56.254`; tạo rule chỉ cho phép máy thật `192.168.56.1` truy cập TCP/443 trên MGMT.
-- [x] Thực hiện backup cấu hình ban đầu và snapshot máy ảo (được người thực hành xác nhận).
-- [x] Cấu hình Client-A `10.6.0.21/24`, ping `10.6.0.1` thành công **4/4 gói, 0% mất gói**.
-- [x] Cấu hình Ubuntu ens33 `172.16.6.10/24`, default gateway `172.16.6.1`.
-- [x] Kịch bản 5: tạo rule **Block DMZ subnets → LAN subnets** trên DMZ và **Pass Client-A → 172.16.6.10 TCP/80** trên LAN.
-- [x] Kịch bản 5, chiều **LAN → DMZ**: Client-A mở `http://172.16.6.10`; Python HTTP Server trên Ubuntu ghi nhận **GET / HTTP/1.1 — 200**.
-
-> **Giới hạn chứng cứ:** HTTP server hiện dùng `python3 -m http.server 80` để thử nhanh; **Nginx chưa được xác nhận cài**. Ảnh trình duyệt đầu tiên là directory listing, sau đó đang chuẩn bị trang test riêng. Không ghi nhận đã hoàn thành Nginx hoặc toàn bộ kịch bản 5 khi chưa đủ phép thử.
-
-## 4. Tình trạng 5 kịch bản
-
-| Kịch bản | Nội dung | Trạng thái xác minh trong nhánh thực hành này |
+| Thiết bị / vùng mạng | Kết nối | Địa chỉ IP |
 |---|---|---|
-| **1** | Client-A bị chặn JOB_SITE (172.16.6.20) | Chưa có ảnh rule + kết quả |
-| **2** | Chặn RESTRICTED_SITE (172.16.6.40) cho A và B | Chưa có ảnh rule + kết quả |
-| **3** | Client-B chỉ được SOCIAL_SITE (172.16.6.30) trong giờ nghỉ | Chưa có ảnh rule + kết quả |
-| **4** | Giới hạn HTTP/HTTPS theo WORK_HOURS | Chưa có ảnh rule + kết quả |
-| **5** | Cô lập DMZ khỏi LAN, LAN truy cập web cần thiết | **Đã tạo 2 rule; xác nhận chiều LAN → DMZ; chờ kết quả DMZ → LAN và Firewall Log** |
+| pfSense WAN | VMnet8 – em0, NAT | DHCP (lúc chụp: 192.168.195.131/24) |
+| pfSense MGMT | VMnet4 – em1 | 192.168.56.254/24 |
+| Máy quản trị | VMnet4 | 192.168.56.1/24 |
+| pfSense LAN | VMnet5 – em2 | 10.6.0.1/24 |
+| Windows Lab (Client-A) | VMnet5 | 10.6.0.21/24 |
+| pfSense DMZ | VMnet6 – em3 | 172.16.6.1/24 |
+| Ubuntu Server | VMnet6 – ens33 | 172.16.6.10/24 |
+| Client-B (theo đề) | LAN | 10.6.0.22/24 – chưa có kết quả kiểm thử |
+| DC01 (theo đề) | LAN | 10.6.0.10/24 – chưa kiểm thử AD/LDAP |
 
-**Không ghi nhận 6–7 thành các kịch bản độc lập** theo phạm vi được giao; vẫn dùng Log/State khi cần chứng minh policy.
+Trên Ubuntu, em gán thêm ba IP phụ để mô phỏng các nhóm website:
 
-## 5. Việc cần bổ sung trước khi nộp bản hoàn chỉnh
+| Alias | IP | Mục đích |
+|---|---|---|
+| GENERAL_SITE | 172.16.6.10 | Website thông thường |
+| JOB_SITE | 172.16.6.20 | Website việc làm |
+| SOCIAL_SITE | 172.16.6.30 | Mạng xã hội |
+| RESTRICTED_SITE | 172.16.6.40 | Website hạn chế |
 
-- [ ] Ảnh thử **DMZ → LAN** bị Block và bản ghi **Firewall Log** trùng source/destination của kịch bản 5.
-- [ ] Hoàn thiện web test DMZ (ưu tiên Nginx) và các IP `.20`, `.30`, `.40`.
-- [ ] Bằng chứng và phân tích kết quả kịch bản 1–4.
-- [ ] AD DS + DNS, user `sv_a`, `sv_b`, service account LDAP; Diagnostics → Authentication.
-- [ ] Captive Portal, Alias, Schedule; các ảnh test cần thiết.
-- [ ] Bảng kết quả, 12 câu hỏi phân tích theo đề và ảnh minh chứng.
-- [ ] Xuất `config.xml` cuối cùng; **không tải lên bản config chứa thông tin nhạy cảm ở repo công khai nếu chưa xử lý an toàn**.
-- [ ] Tải báo cáo Word hoàn chỉnh vào thư mục này khi đã sẵn sàng.
+Website thử nghiệm chạy bằng Python HTTP Server trên cổng 80; trang **LAB6_DMZ_WEB_OK** dùng để kiểm tra kết nối. Phần này chưa chuyển sang Nginx và IP phụ hiện được cấu hình tạm thời.
 
-## 6. Tệp báo cáo
+## 3. Alias và Schedule
 
-Tên báo cáo đang biên soạn: **`11_DH_TMDT-Lab6_1150070050_NguyenNgocTuVy.docx`**.  
-Báo cáo này tổng hợp phần đã thực hành với ảnh chụp thật. **Tệp Word sẽ được bổ sung riêng vào thư mục này** khi tải lên GitHub.
+Em tạo các IP Alias: `CLIENT_A`, `CLIENT_B`, `POLICY_CLIENTS`, `GENERAL_SITE`, `JOB_SITE`, `SOCIAL_SITE`, `RESTRICTED_SITE`. Alias `WEB_PORTS` gồm cổng **80** và **443**.
 
-## 7. Tài liệu tham khảo
+| Schedule | Thời gian | Sử dụng |
+|---|---|---|
+| `LUNCH_WINDOW` | Thứ Hai–Thứ Sáu, 11:30–13:00 | KB3 |
+| `WORK_HOURS` | Thứ Hai–Thứ Sáu, 08:00–17:00 | KB4 |
+| `TEST_NOW` | 13/10/2026, 20:00–21:00 | Kiểm thử tạm KB4 |
 
-- Tài liệu thực hành **LAB6_pfSense_AD_Access_Policies_2026.pdf** do giảng viên cung cấp.
-- [Netgate pfSense Documentation](https://docs.netgate.com/pfsense/en/latest/)
-- [Ubuntu Server Documentation](https://documentation.ubuntu.com/server/)
+Sau khi kiểm thử, Schedule của rule KB4 đã được đổi lại từ `TEST_NOW` về `WORK_HOURS`.
 
----
+## 4. Kết quả năm kịch bản
 
-**Trạng thái:** *Bản nháp có minh chứng, chưa phải bản nộp hoàn chỉnh*. README sẽ được cập nhật cùng Word, ảnh và kết quả khi hoàn tất các kịch bản.
+| KB | Chính sách | Kết quả đã kiểm tra |
+|---|---|---|
+| **KB1** | Chặn Client-A truy cập JOB_SITE `.20` | Client-A truy cập `.20` bị timeout; GENERAL_SITE `.10` vẫn mở được. |
+| **KB2** | Chặn POLICY_CLIENTS truy cập RESTRICTED_SITE `.40` | Client-A truy cập `.40` bị timeout. Chưa thử trực tiếp trên Client-B. |
+| **KB3** | Client-B chỉ vào SOCIAL_SITE `.30` trong giờ nghỉ | Đã tạo rule Pass theo `LUNCH_WINDOW` và rule Block bên dưới. Chưa kiểm thử trên Client-B. |
+| **KB4** | Cho phép WEB_PORTS theo `WORK_HOURS` | Khi dùng `TEST_NOW`, Client-A mở được `.30`; ngoài giờ, lệnh `curl` tới `.30` bị timeout. KB1 vẫn chặn `.20`. Đã đổi lại `WORK_HOURS`. |
+| **KB5** | Cho LAN vào web DMZ, chặn DMZ khởi tạo kết nối về LAN | Client-A mở `.10` thành công (HTTP 200). Ubuntu ping Client-A mất 100% gói; Firewall Log ghi nhận 4 gói ICMP bị chặn. |
+
+Trong quá trình làm KB4, em từng đặt rule Block phía trên rule Pass khiến GENERAL_SITE cũng bị chặn. Sau khi kiểm tra log và sắp lại thứ tự rule, kết nối tới `.10` hoạt động bình thường.
+
+## 5. Hình ảnh minh chứng
+
+Ảnh đã được sắp trong thư mục `img/`, theo đúng từng nội dung để tiện xem và đối chiếu với báo cáo Word.
+
+| Thư mục | Nội dung | Ảnh tiêu biểu |
+|---|---|---|
+| `img/setup/` | VMware, IP các interface, Client-A, Ubuntu Web | [Ubuntu nhận 4 IP](img/setup/06_Ubuntu_DMZ_4_IP.png) |
+| `img/alias_schedule/` | Alias, WEB_PORTS, lịch làm việc và lịch thử | [Alias IP](img/alias_schedule/10_Alias_7_IP.png) |
+| `img/KB1/` | Rule chặn JOB_SITE, kết quả timeout | [Kiểm thử KB1](img/KB1/15_KB1_JOB_SITE_Timeout.png) |
+| `img/KB2/` | Client-A bị chặn RESTRICTED_SITE | [Kiểm thử KB2](img/KB2/16_KB2_ClientA_RESTRICTED_Timeout.png) |
+| `img/KB3/` | Rule Pass/Block của SOCIAL_SITE theo giờ nghỉ | [Rule KB3](img/KB3/17_KB3_Social_Schedule_Rules.png) |
+| `img/KB4/` | Truy cập trong giờ thử và timeout ngoài giờ | [Kiểm tra bằng curl](img/KB4/20_KB4_OutsideHours_Curl_Timeout.png) |
+| `img/KB5/` | Rule DMZ, ping bị chặn và Firewall Log | [Firewall Log](img/KB5/24_KB5_Firewall_Log_4_ICMP_Blocks.png) |
+
+## 6. Phần chưa kiểm tra
+
+- Chưa có phép thử trực tiếp trên Client-B (`10.6.0.22`) ở KB2 và KB3.
+- KB4 mới kiểm tra HTTP/80; chưa thử riêng HTTPS/443.
+- Chưa có kết quả AD DS, LDAP, Captive Portal hoặc State Table để đưa vào báo cáo.
+- Chưa kiểm thử DMZ tới DC01 (`10.6.0.10`); ảnh KB5 hiện ghi nhận chiều DMZ tới Client-A (`10.6.0.21`).
+- Web server đang chạy tạm bằng Python; cấu hình Nginx và Netplan cố định chưa hoàn thành.
+
+Các phần chưa kiểm tra được giữ riêng để không nhầm với những kết quả đã thực hiện.
+
+## 7. Tài liệu
+
+- Đề thực hành: `LAB6_pfSense_AD_Access_Policies_2026.pdf`.
+- Báo cáo Word: `11_DH_TMDT-Lab6_1150070050_NguyenNgocTuVy.docx` (tệp nộp riêng; cần tải lên GitHub nếu muốn lưu cùng repository).
+- [Tài liệu pfSense của Netgate](https://docs.netgate.com/pfsense/en/latest/).
+
+**Lưu ý:** Không tải lên GitHub công khai file backup `config.xml` hoặc dữ liệu chứa mật khẩu chưa được xử lý.
