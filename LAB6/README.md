@@ -3,6 +3,7 @@
 **Môn học:** An toàn hệ thống thông tin  
 **Sinh viên:** Nguyễn Ngọc Tú Vy – 1150070050 – 11_DH_TMDT  
 **Ngày thực hành:** 13/10/2026
+**Youtube:**https://youtu.be/e98ghv28Mmg
 
 ## 1. Nội dung thực hành
 
