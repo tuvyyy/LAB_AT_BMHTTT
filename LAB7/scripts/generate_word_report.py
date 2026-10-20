@@ -3,7 +3,6 @@ from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import parse_xml
 from docx.oxml.ns import nsdecls
-import json
 import os
 
 def set_cell_background(cell, hex_color):
@@ -16,12 +15,21 @@ def set_cell_margins(cell, top=100, bottom=100, left=150, right=150):
     tcMar = parse_xml(f'<w:tcMar {nsdecls("w")}><w:top w:w="{top}" w:type="dxa"/><w:bottom w:w="{bottom}" w:type="dxa"/><w:left w:w="{left}" w:type="dxa"/><w:right w:w="{right}" w:type="dxa"/></w:tcMar>')
     tcPr.append(tcMar)
 
+def add_caption(doc, text):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(text)
+    run.font.italic = True
+    run.font.size = Pt(9)
+    run.font.color.rgb = RGBColor(80, 80, 80)
+
 def create_report():
     template_path = r'C:\LAB7\resources\LAB7_Resources\05_REPORT\LAB7_Report_Template.docx'
     output_dir = r'C:\LAB7\report'
+    img_dir = r'C:\LAB7\img'
     os.makedirs(output_dir, exist_ok=True)
     
-    # Remove any old report files if present
+    # Remove any old report files
     for fname in os.listdir(output_dir):
         if fname.endswith('.docx') and fname != '11_DH_TMDT-LAB7_1150070050_NguyenNgocTuVy.docx':
             try:
@@ -30,10 +38,9 @@ def create_report():
                 pass
 
     output_path = os.path.join(output_dir, '11_DH_TMDT-LAB7_1150070050_NguyenNgocTuVy.docx')
-
     doc = docx.Document(template_path)
 
-    # 1. Update Student Header Info - Exact student details
+    # 1. Update Student Header Info
     for p in doc.paragraphs:
         if "Mã lớp:" in p.text:
             p.text = "Lớp: 11_DH_TMDT"
@@ -48,7 +55,7 @@ def create_report():
             p.text = "Ngày thực hiện: 20/10/2026 | Môn: An toàn hệ thống thông tin"
             p.runs[0].font.bold = True
 
-    # Section 1 text
+    # Section 1
     for p in doc.paragraphs:
         if "Dán ảnh topology/VM và ghi các IP thực tế đã sử dụng" in p.text:
             p.text = """1.1. BẢNG THÔNG SỐ ĐỊA CHỈ IP VÀ HẠ TẦNG THỰC TẾ:
@@ -71,7 +78,6 @@ def create_report():
 
     # Populate Table 0 (Bảng kiểm thử chính sách)
     table = doc.tables[0]
-    
     headers = ["Kịch bản", "URL / FQDN", "Kỳ vọng (Policy)", "Thực tế kiểm thử", "Đánh giá & Minh chứng"]
     for j, h in enumerate(headers):
         cell = table.cell(0, j)
@@ -85,16 +91,16 @@ def create_report():
                 run.font.size = Pt(9.5)
 
     test_matrix = [
-        ("KB1: Baseline Web", "http://normal.lab7.test", "ALLOW: Cho phép truy cập bình thường qua proxy", "HTTP 200 OK. Nginx upstream DMZ-WEB trả về nội dung trang 'Normal Site' đầy đủ.", "PASS\nLog: *SCANNED* *TRUSTED* Site match"),
-        ("KB2: Geo-Sim Block", "http://china.lab7.test\nhttp://mideast.lab7.test", "HARD_BLOCK: Chặn website theo vị trí địa lý mô phỏng", "HTTP 403 / E2Guardian Access Denied. Danh sách cấm không cho phép bypass.", "PASS\nLog: *DENIED* Blocked site: china / mideast"),
-        ("KB3: Job Search", "http://jobs.lab7.test", "HARD_BLOCK: Chặn danh mục tìm việc làm", "HTTP 403 / E2Guardian Access Denied. Nằm trong bannedsitelist.", "PASS\nLog: *DENIED* Blocked site: jobs.lab7.test"),
-        ("KB4: Cảnh báo nội dung", "http://weapons.lab7.test\nhttp://politics.lab7.test\nhttp://religion.lab7.test", "WARNING: Cảnh báo nội dung + Hỗ trợ Temporary Bypass", "Trang cảnh báo tiếng Việt hiển thị kèm liên kết mở khóa tạm thời 300 giây (bypass=300).", "PASS (Cấu hình & Trang cảnh báo)\nLog: *DENIED* Blocked site (Warning Mode)"),
-        ("KB5: Ngoại lệ giáo dục", "http://education.lab7.test", "ALLOW: Whitelist Exception ưu tiên cao nhất", "HTTP 200 OK. Nằm trong exceptionsitelist nên vượt qua các bộ lọc blacklist.", "PASS\nLog: *SCANNED* *TRUSTED* Site match: education"),
-        ("KB6: Giới hạn giải trí", "http://entertainment.lab7.test\nhttp://games.lab7.test", "SCHEDULE: Áp dụng khung giờ truy cập (60M schedule)", "HTTP 200 OK trong phiên lab; áp dụng Time-window policy / pfSense schedule chặn ngoài giờ.", "PASS (Điều kiện phiên lab)\nChính sách Time-Window sư phạm"),
-        ("KB7: Streaming video", "http://streaming.lab7.test", "WARNING: Cảnh báo băng thông + Cho phép bypass", "Trang cảnh báo hiển thị nhắc nhở người dùng, hỗ trợ cơ chế temporary bypass.", "PASS\nLog: *DENIED* Blocked site: streaming"),
-        ("KB8: Chặn game cụ thể", "http://blockedgame.lab7.test", "HARD_BLOCK: Chặn dứt khoát game cụ thể (no bypass)", "HTTP 403 / Access Denied. Nằm trong domainsnobypass, triệt tiêu liên kết bypass.", "PASS\nLog: *DENIED* Blocked site: blockedgame"),
-        ("KB9: Quét virus ClamAV", "http://download.lab7.test/files/eicar.com.txt", "AV_BLOCK: ClamAV phát hiện mã độc EICAR và chặn tải file", "Bị chặn bởi module clamdscan. Trình duyệt nhận trang cảnh báo virus EICAR.", "PASS\nLog: *INFECTED* Virus or bad content detected. Eicar-Signature"),
-        ("KB10: Giới hạn size tải", "10MB.bin, 100MB.bin\n110MB.bin", "SIZE_LIMIT: 10M/100M cho phép; 110M chặn (reply_body_max_size 100MB)", "10MB và 100MB tải thành công HTTP 200 OK. 110MB bị Squid ngắt với HTTP 403 ERR_TOO_BIG.", "PASS\nSquid: TCP_DENIED_REPLY/403 ERR_TOO_BIG")
+        ("KB1: Baseline Web", "http://normal.lab7.test", "ALLOW: Cho phép truy cập bình thường qua proxy", "HTTP 200 OK. Nginx upstream DMZ-WEB trả về nội dung trang 'Normal Site' đầy đủ.", "PASS (Hình 3)\nLog: *SCANNED* *TRUSTED* Site match"),
+        ("KB2: Geo-Sim Block", "http://china.lab7.test\nhttp://mideast.lab7.test", "HARD_BLOCK: Chặn website theo vị trí địa lý mô phỏng", "HTTP 403 / E2Guardian Access Denied. Danh sách cấm không cho phép bypass.", "PASS (Hình 4)\nLog: *DENIED* Blocked site: china / mideast"),
+        ("KB3: Job Search", "http://jobs.lab7.test", "HARD_BLOCK: Chặn danh mục tìm việc làm", "HTTP 403 / E2Guardian Access Denied. Nằm trong bannedsitelist.", "PASS (Hình 5)\nLog: *DENIED* Blocked site: jobs.lab7.test"),
+        ("KB4: Cảnh báo nội dung", "http://weapons.lab7.test\nhttp://politics.lab7.test\nhttp://religion.lab7.test", "WARNING: Cảnh báo nội dung + Hỗ trợ Temporary Bypass", "Trang cảnh báo tiếng Việt hiển thị kèm liên kết mở khóa tạm thời 300 giây (bypass=300).", "PASS (Hình 6)\nLog: *DENIED* Blocked site (Warning Mode)"),
+        ("KB5: Ngoại lệ giáo dục", "http://education.lab7.test", "ALLOW: Whitelist Exception ưu tiên cao nhất", "HTTP 200 OK. Nằm trong exceptionsitelist nên vượt qua các bộ lọc blacklist.", "PASS (Hình 7)\nLog: *SCANNED* *TRUSTED* Site match: education"),
+        ("KB6: Giới hạn giải trí", "http://entertainment.lab7.test\nhttp://games.lab7.test", "SCHEDULE: Áp dụng khung giờ truy cập (60M schedule)", "HTTP 200 OK trong phiên lab; áp dụng Time-window policy / pfSense schedule chặn ngoài giờ.", "PARTIAL (Điều kiện phiên lab)\nChưa test đủ đồng hồ 60 phút"),
+        ("KB7: Streaming video", "http://streaming.lab7.test", "WARNING: Cảnh báo băng thông + Cho phép bypass", "Trang cảnh báo hiển thị nhắc nhở người dùng, hỗ trợ cơ chế temporary bypass.", "PASS (Log thật)\nLog: *DENIED* Blocked site: streaming"),
+        ("KB8: Chặn game cụ thể", "http://blockedgame.lab7.test", "HARD_BLOCK: Chặn dứt khoát game cụ thể (no bypass)", "HTTP 403 / Access Denied. Nằm trong domainsnobypass, triệt tiêu liên kết bypass.", "PASS (Hình 8)\nLog: *DENIED* Blocked site: blockedgame"),
+        ("KB9: Quét virus ClamAV", "http://download.lab7.test/files/eicar.com.txt", "AV_BLOCK: ClamAV phát hiện mã độc EICAR và chặn tải file", "Bị chặn bởi module clamdscan. Trình duyệt nhận trang cảnh báo virus EICAR.", "PASS (Hình 9)\nLog: *INFECTED* Virus Eicar-Signature"),
+        ("KB10: Giới hạn size tải", "10MB.bin, 100MB.bin\n110MB.bin", "SIZE_LIMIT: 10M/100M cho phép; 110M chặn (reply_body_max_size 100MB)", "10MB và 100MB tải thành công HTTP 200 OK. 110MB bị Squid ngắt với HTTP 403 ERR_TOO_BIG.", "PASS (Hình 10)\nSquid: TCP_DENIED_REPLY/403 ERR_TOO_BIG")
     ]
 
     while len(table.rows) < len(test_matrix) + 1:
@@ -112,9 +118,13 @@ def create_report():
                 p.alignment = WD_ALIGN_PARAGRAPH.LEFT if c_idx != 4 else WD_ALIGN_PARAGRAPH.CENTER
                 for run in p.runs:
                     run.font.size = Pt(8.5)
-                    if c_idx == 4 and "PASS" in run.text:
-                        run.font.bold = True
-                        run.font.color.rgb = RGBColor(0, 128, 0)
+                    if c_idx == 4:
+                        if "PASS" in run.text:
+                            run.font.bold = True
+                            run.font.color.rgb = RGBColor(0, 128, 0)
+                        elif "PARTIAL" in run.text:
+                            run.font.bold = True
+                            run.font.color.rgb = RGBColor(180, 100, 0)
 
     # Fill in Section 3: Firewall rules pfSense
     for p in doc.paragraphs:
@@ -218,7 +228,33 @@ Trả lời: Giả thuyết đầu tiên và quan trọng nhất là: 'Lưu lư�
                 doc.paragraphs[j].text = ""
             break
 
-    # Check and clean document core properties (metadata)
+    # Add Section 6: Phụ lục ảnh minh chứng thực tế
+    h6 = doc.add_heading("6. Phụ Lục Ảnh Minh Chứng Thực Tế Triển Khai & Kiểm Thử", level=1)
+    
+    evidence_items = [
+        ("dmz_web_status.png", "Hình 1: Trạng thái máy chủ DMZ-WEB (IP 172.16.6.10, Nginx active, các tệp kiểm thử 10M/100M/110M/EICAR)"),
+        ("web_proxy_services.png", "Hình 2: Trạng thái các dịch vụ lõi trên WEB-PROXY (IP 10.6.0.30, Squid, E2Guardian và ClamAV active)"),
+        ("kb1_normal_allowed.png", "Hình 3 - KB1: Kiểm thử trang bình thường (normal.lab7.test) được phép qua proxy với mã trạng thái HTTP 200 OK"),
+        ("kb2_geo_blocked.png", "Hình 4 - KB2: E2Guardian chặn trang Geo-Sim mô phỏng (china.lab7.test) với mã lỗi 403 Access Denied"),
+        ("kb3_job_blocked.png", "Hình 5 - KB3: E2Guardian chặn danh mục tìm kiếm việc làm (jobs.lab7.test) không có liên kết bypass"),
+        ("kb4_warning_bypass.png", "Hình 6 - KB4: Trang cảnh báo tiếng Việt cho site nhạy cảm (weapons.lab7.test) kèm liên kết Temporary Bypass 300 giây"),
+        ("kb5_education_allowed.png", "Hình 7 - KB5: Tên miền giáo dục (education.lab7.test) nằm trong exceptionsitelist được phép truy cập trực tiếp"),
+        ("kb8_blockedgame.png", "Hình 8 - KB8: Chặn cứng game cụ thể (blockedgame.lab7.test) trong danh sách domainsnobypass"),
+        ("kb9_clamav_eicar.png", "Hình 9 - KB9: ClamAV Daemon phát hiện mã độc EICAR và ngắt kết nối tải về (*INFECTED* Eicar-Signature)"),
+        ("kb10_size_limit.png", "Hình 10 - KB10: Squid kiểm soát kích thước tải về (10MB/100MB cho phép HTTP 200; 110MB bị chặn HTTP 403 ERR_TOO_BIG)")
+    ]
+
+    for img_name, caption_text in evidence_items:
+        img_path = os.path.join(img_dir, img_name)
+        if os.path.exists(img_path):
+            doc.add_paragraph()
+            p_img = doc.add_paragraph()
+            p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            run_img = p_img.add_run()
+            run_img.add_picture(img_path, width=Inches(5.8))
+            add_caption(doc, caption_text)
+
+    # Core properties
     core_props = doc.core_properties
     core_props.author = "Nguyễn Ngọc Tú Vy"
     core_props.last_modified_by = "Nguyễn Ngọc Tú Vy"
@@ -226,7 +262,7 @@ Trả lời: Giả thuyết đầu tiên và quan trọng nhất là: 'Lưu lư�
     core_props.subject = "An toàn hệ thống thông tin - 11_DH_TMDT"
 
     doc.save(output_path)
-    print(f"Report saved successfully to {output_path}")
+    print(f"Report with embedded images saved successfully to {output_path} ({os.path.getsize(output_path)} bytes)")
 
 if __name__ == '__main__':
     create_report()
