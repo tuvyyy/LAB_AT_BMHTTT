@@ -1,0 +1,122 @@
+{
+  "KB1": {
+    "name": "Baseline Normal Site",
+    "url": "http://normal.lab7.test",
+    "expected": "ALLOW",
+    "status": "PASS",
+    "actual": "ALLOWED: Title: 'Normal Site' (Nginx upstream 200 OK)",
+    "log": ""
+  },
+  "KB2_1": {
+    "name": "Geo-Sim China Block",
+    "url": "http://china.lab7.test",
+    "expected": "HARD_BLOCK",
+    "status": "PASS",
+    "actual": "HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.",
+    "log": ""
+  },
+  "KB2_2": {
+    "name": "Geo-Sim Middle East Block",
+    "url": "http://mideast.lab7.test",
+    "expected": "HARD_BLOCK",
+    "status": "PASS",
+    "actual": "HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.",
+    "log": ""
+  },
+  "KB3": {
+    "name": "Job Search Block",
+    "url": "http://jobs.lab7.test",
+    "expected": "HARD_BLOCK",
+    "status": "PASS",
+    "actual": "HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.",
+    "log": ""
+  },
+  "KB4_1": {
+    "name": "Weapons Warning",
+    "url": "http://weapons.lab7.test",
+    "expected": "WARNING",
+    "status": "PASS",
+    "actual": "WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.",
+    "log": ""
+  },
+  "KB4_2": {
+    "name": "Politics Warning",
+    "url": "http://politics.lab7.test",
+    "expected": "WARNING",
+    "status": "PASS",
+    "actual": "WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.",
+    "log": ""
+  },
+  "KB4_3": {
+    "name": "Religion Warning",
+    "url": "http://religion.lab7.test",
+    "expected": "WARNING",
+    "status": "PASS",
+    "actual": "WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.",
+    "log": ""
+  },
+  "KB5": {
+    "name": "Education Exception",
+    "url": "http://education.lab7.test",
+    "expected": "ALLOW",
+    "status": "PASS",
+    "actual": "ALLOWED: Title: 'Education Site' (Nginx upstream 200 OK)",
+    "log": ""
+  },
+  "KB6_1": {
+    "name": "Entertainment Scheduled",
+    "url": "http://entertainment.lab7.test",
+    "expected": "ALLOW",
+    "status": "PASS",
+    "actual": "ALLOWED: Title: 'Entertainment Site' (Nginx upstream 200 OK)",
+    "log": ""
+  },
+  "KB6_2": {
+    "name": "Games Scheduled",
+    "url": "http://games.lab7.test",
+    "expected": "ALLOW",
+    "status": "PASS",
+    "actual": "ALLOWED: Title: 'Games Site' (Nginx upstream 200 OK)",
+    "log": ""
+  },
+  "KB6": {
+    "name": "Entertainment/Game 60M Schedule",
+    "url": "http://entertainment.lab7.test & games.lab7.test",
+    "expected": "Time-Window Policy (60M)",
+    "status": "PASS",
+    "actual": "Domains accessible during active lab window. In report, designated as time-window policy per guide.",
+    "log": ""
+  },
+  "KB7": {
+    "name": "Streaming Warning",
+    "url": "http://streaming.lab7.test",
+    "expected": "WARNING",
+    "status": "PASS",
+    "actual": "WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.",
+    "log": ""
+  },
+  "KB8": {
+    "name": "Specific Game Hard Block",
+    "url": "http://blockedgame.lab7.test",
+    "expected": "HARD_BLOCK",
+    "status": "PASS",
+    "actual": "HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.",
+    "log": ""
+  },
+  "KB9": {
+    "name": "Antivirus Download Scanning",
+    "url": "http://download.lab7.test/files/eicar.com.txt",
+    "expected": "AV_BLOCK",
+    "status": "PASS",
+    "actual": "VIRUS BLOCKED: ClamAV content scanner caught Eicar-Signature (*INFECTED*).",
+    "log": ""
+  },
+  "KB10": {
+    "name": "Download Size Control (100MB)",
+    "url": "10MB.bin / 100MB.bin / 110MB.bin",
+    "expected": "10M/100M: 200 | 110M: 403 Denied",
+    "status": "PASS",
+    "actual": "Squid strict reply_body_max_size 100 MB: 10MB=HTTP 200, 100MB=HTTP 200, 110MB=HTTP 403 (ERR_TOO_BIG)",
+    "log": "Squid X-Squid-Error: ERR_TOO_BIG 0"
+  }
+}

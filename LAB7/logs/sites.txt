@@ -1,0 +1,14 @@
+blockedgame.lab7.test
+china.lab7.test
+default
+download.lab7.test
+education.lab7.test
+entertainment.lab7.test
+games.lab7.test
+jobs.lab7.test
+mideast.lab7.test
+normal.lab7.test
+politics.lab7.test
+religion.lab7.test
+streaming.lab7.test
+weapons.lab7.test

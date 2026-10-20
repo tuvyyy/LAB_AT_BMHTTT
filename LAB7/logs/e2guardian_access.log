@@ -1,0 +1,44 @@
+1792486375.069		-	127.0.0.1	127.0.0.1	http://china.lab7.test	GET	403	0	-	-	-	17	-	500	*DENIED* Blocked site: china.lab7.test	0	-	no_name_group	1
+1792486375.080		-	127.0.0.1	127.0.0.1	http://jobs.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: jobs.lab7.test	0	-	no_name_group	1
+1792486375.087		-	127.0.0.1	127.0.0.1	http://weapons.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: weapons.lab7.test	0	-	no_name_group	1
+1792486700.859		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/eicar.com.txt	GET	200	69	-	-	-	7	-	602	*TRUSTED* Site match: download.lab7.test	0	-	no_name_group	1
+1792486759.770		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/eicar.com.txt	GET	403	69	-	-	-	19	-	602	*INFECTED* * *DENIED* Virus or bad content detected. Eicar-Signature	0	Content scanning	no_name_group	1
+1792486790.711		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/10MB.bin	GET	200	10485760	-	-	-	1270	-	602	*SCANNED* *TRUSTED* Site match: download.lab7.test	0	-	no_name_group	1
+1792486793.409		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/110MB.bin	GET	200	115343360	-	-	-	2690	-	602	*TRUSTED* Site match: download.lab7.test	0	-	no_name_group	1
+1792486795.772		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/100MB.bin	GET	200	104857600	-	-	-	2353	-	602	*TRUSTED* Site match: download.lab7.test	0	-	no_name_group	1
+1792487104.750		-	127.0.0.1	127.0.0.1	http://normal.lab7.test	GET	200	405	-	-	-	386	-	602	*SCANNED* *TRUSTED* Site match: normal.lab7.test	0	-	no_name_group	1
+1792487104.756		-	127.0.0.1	127.0.0.1	http://china.lab7.test	GET	403	0	-	-	-	3	-	500	*DENIED* Blocked site: china.lab7.test	0	-	no_name_group	1
+1792487104.759		-	127.0.0.1	127.0.0.1	http://mideast.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: mideast.lab7.test	0	-	no_name_group	1
+1792487104.761		-	127.0.0.1	127.0.0.1	http://jobs.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: jobs.lab7.test	0	-	no_name_group	1
+1792487104.763		-	127.0.0.1	127.0.0.1	http://weapons.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: weapons.lab7.test	0	-	no_name_group	1
+1792487104.766		-	127.0.0.1	127.0.0.1	http://politics.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: politics.lab7.test	0	-	no_name_group	1
+1792487104.769		-	127.0.0.1	127.0.0.1	http://religion.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: religion.lab7.test	0	-	no_name_group	1
+1792487104.801		-	127.0.0.1	127.0.0.1	http://education.lab7.test	GET	200	404	-	-	-	30	-	602	*SCANNED* *TRUSTED* Site match: education.lab7.test	-20	-	no_name_group	1
+1792487104.856		-	127.0.0.1	127.0.0.1	http://streaming.lab7.test	GET	403	0	-	-	-	1	-	500	*DENIED* Blocked site: streaming.lab7.test	0	-	no_name_group	1
+1792487104.857		-	127.0.0.1	127.0.0.1	http://blockedgame.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: blockedgame.lab7.test	0	-	no_name_group	1
+1792487104.871		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/eicar.com.txt	GET	403	69	-	-	-	12	-	602	*INFECTED* * *DENIED* Virus or bad content detected. Eicar-Signature	0	Content scanning	no_name_group	1
+1792487161.928		-	127.0.0.1	127.0.0.1	http://normal.lab7.test	GET	200	405	-	-	-	14	-	602	*SCANNED* *TRUSTED* Site match: normal.lab7.test	0	-	no_name_group	1
+1792487161.932		-	127.0.0.1	127.0.0.1	http://china.lab7.test	GET	403	0	-	-	-	1	-	500	*DENIED* Blocked site: china.lab7.test	0	-	no_name_group	1
+1792487161.935		-	127.0.0.1	127.0.0.1	http://mideast.lab7.test	GET	403	0	-	-	-	1	-	500	*DENIED* Blocked site: mideast.lab7.test	0	-	no_name_group	1
+1792487161.937		-	127.0.0.1	127.0.0.1	http://jobs.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: jobs.lab7.test	0	-	no_name_group	1
+1792487161.939		-	127.0.0.1	127.0.0.1	http://weapons.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: weapons.lab7.test	0	-	no_name_group	1
+1792487161.942		-	127.0.0.1	127.0.0.1	http://politics.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: politics.lab7.test	0	-	no_name_group	1
+1792487161.945		-	127.0.0.1	127.0.0.1	http://religion.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: religion.lab7.test	0	-	no_name_group	1
+1792487161.954		-	127.0.0.1	127.0.0.1	http://education.lab7.test	GET	200	404	-	-	-	7	-	602	*SCANNED* *TRUSTED* Site match: education.lab7.test	-20	-	no_name_group	1
+1792487161.974		-	127.0.0.1	127.0.0.1	http://streaming.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: streaming.lab7.test	0	-	no_name_group	1
+1792487161.978		-	127.0.0.1	127.0.0.1	http://blockedgame.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: blockedgame.lab7.test	0	-	no_name_group	1
+1792487161.990		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/eicar.com.txt	GET	403	69	-	-	-	11	-	602	*INFECTED* * *DENIED* Virus or bad content detected. Eicar-Signature	0	Content scanning	no_name_group	1
+1792487183.257		-	127.0.0.1	127.0.0.1	http://china.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: china.lab7.test	0	-	no_name_group	1
+1792487190.039		-	127.0.0.1	127.0.0.1	http://china.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: china.lab7.test	0	-	no_name_group	1
+1792487225.366		-	127.0.0.1	127.0.0.1	http://china.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: china.lab7.test	0	-	no_name_group	1
+1792487312.170		-	127.0.0.1	127.0.0.1	http://normal.lab7.test	GET	200	405	-	-	-	10	-	602	*SCANNED* *TRUSTED* Site match: normal.lab7.test	0	-	no_name_group	1
+1792487312.183		-	127.0.0.1	127.0.0.1	http://china.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: china.lab7.test	0	-	no_name_group	1
+1792487312.195		-	127.0.0.1	127.0.0.1	http://mideast.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: mideast.lab7.test	0	-	no_name_group	1
+1792487312.204		-	127.0.0.1	127.0.0.1	http://jobs.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: jobs.lab7.test	0	-	no_name_group	1
+1792487312.215		-	127.0.0.1	127.0.0.1	http://weapons.lab7.test	GET	403	0	-	-	-	0	-	500	*DENIED* Blocked site: weapons.lab7.test	0	-	no_name_group	1
+1792487312.225		-	127.0.0.1	127.0.0.1	http://politics.lab7.test	GET	403	0	-	-	-	2	-	500	*DENIED* Blocked site: politics.lab7.test	0	-	no_name_group	1
+1792487312.236		-	127.0.0.1	127.0.0.1	http://religion.lab7.test	GET	403	0	-	-	-	1	-	500	*DENIED* Blocked site: religion.lab7.test	0	-	no_name_group	1
+1792487312.251		-	127.0.0.1	127.0.0.1	http://education.lab7.test	GET	200	404	-	-	-	5	-	602	*SCANNED* *TRUSTED* Site match: education.lab7.test	-20	-	no_name_group	1
+1792487312.286		-	127.0.0.1	127.0.0.1	http://streaming.lab7.test	GET	403	0	-	-	-	1	-	500	*DENIED* Blocked site: streaming.lab7.test	0	-	no_name_group	1
+1792487312.301		-	127.0.0.1	127.0.0.1	http://blockedgame.lab7.test	GET	403	0	-	-	-	1	-	500	*DENIED* Blocked site: blockedgame.lab7.test	0	-	no_name_group	1
+1792487312.322		-	127.0.0.1	127.0.0.1	http://download.lab7.test/files/eicar.com.txt	GET	403	69	-	-	-	13	-	602	*INFECTED* * *DENIED* Virus or bad content detected. Eicar-Signature	0	Content scanning	no_name_group	1

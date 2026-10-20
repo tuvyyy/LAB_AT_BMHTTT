@@ -1,0 +1,11 @@
+1792486375.113      9 127.0.0.1 TCP_MISS_ABORTED/503 353 HEAD http://localhost/ - HIER_DIRECT/127.0.0.1 text/html
+1792486804.262     13 127.0.0.1 TCP_DENIED_REPLY/403 3640 GET http://download.lab7.test/files/110MB.bin - HIER_DIRECT/172.16.6.10 text/html
+1792487105.195    316 127.0.0.1 TCP_MISS/200 10486104 GET http://download.lab7.test/files/10MB.bin - HIER_DIRECT/172.16.6.10 application/octet-stream
+1792487108.716   3411 127.0.0.1 TCP_MISS/200 104857946 GET http://download.lab7.test/files/100MB.bin - HIER_DIRECT/172.16.6.10 application/octet-stream
+1792487109.911      3 127.0.0.1 TCP_DENIED_REPLY/403 3640 GET http://download.lab7.test/files/110MB.bin - HIER_DIRECT/172.16.6.10 text/html
+1792487162.772    779 127.0.0.1 TCP_MISS/200 10486104 GET http://download.lab7.test/files/10MB.bin - HIER_DIRECT/172.16.6.10 application/octet-stream
+1792487170.376   7571 127.0.0.1 TCP_MISS/200 104857946 GET http://download.lab7.test/files/100MB.bin - HIER_DIRECT/172.16.6.10 application/octet-stream
+1792487170.524      5 127.0.0.1 TCP_DENIED_REPLY/403 3640 GET http://download.lab7.test/files/110MB.bin - HIER_DIRECT/172.16.6.10 text/html
+1792487312.576    246 127.0.0.1 TCP_MISS/200 10486104 GET http://download.lab7.test/files/10MB.bin - HIER_DIRECT/172.16.6.10 application/octet-stream
+1792487314.940   2351 127.0.0.1 TCP_MISS/200 104857946 GET http://download.lab7.test/files/100MB.bin - HIER_DIRECT/172.16.6.10 application/octet-stream
+1792487315.070      3 127.0.0.1 TCP_DENIED_REPLY/403 3640 GET http://download.lab7.test/files/110MB.bin - HIER_DIRECT/172.16.6.10 text/html

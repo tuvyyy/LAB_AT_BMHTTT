@@ -1,0 +1,49 @@
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required
+==================================================================
+LAB7 COMPREHENSIVE KB1 - KB10 EVIDENCE GENERATOR
+==================================================================
+[PASS   ] KB1 : Baseline Normal Site             -> ALLOWED: Title: 'Normal Site' (Nginx upstream 200 OK)
+[PASS   ] KB2_1: Geo-Sim China Block              -> HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.
+[PASS   ] KB2_2: Geo-Sim Middle East Block        -> HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.
+[PASS   ] KB3 : Job Search Block                 -> HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.
+[PASS   ] KB4_1: Weapons Warning                  -> WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.
+[PASS   ] KB4_2: Politics Warning                 -> WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.
+[PASS   ] KB4_3: Religion Warning                 -> WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.
+[PASS   ] KB5 : Education Exception              -> ALLOWED: Title: 'Education Site' (Nginx upstream 200 OK)
+[PASS   ] KB6_1: Entertainment Scheduled          -> ALLOWED: Title: 'Entertainment Site' (Nginx upstream 200 OK)
+[PASS   ] KB6_2: Games Scheduled                  -> ALLOWED: Title: 'Games Site' (Nginx upstream 200 OK)
+[PASS   ] KB7 : Streaming Warning                -> WARNING PAGE: Intercepted with 'E2Guardian - Access Denied'. Configured in bannedsitelist with bypass=300.
+[PASS   ] KB8 : Specific Game Hard Block         -> HARD BLOCKED: E2Guardian intercepted with 'E2Guardian - Access Denied', Non-bypass list active.
+[PASS   ] KB9 : Antivirus Download Scanning      -> VIRUS BLOCKED: ClamAV content scanner caught Eicar-Signature (*INFECTED*).
+[PASS   ] KB10: Download Size Control (100MB)    -> Squid strict reply_body_max_size 100 MB: 10MB=HTTP 200, 100MB=HTTP 200, 110MB=HTTP 403 (ERR_TOO_BIG)
+
+==================================================================
+TEST SUMMARY:
+Total KBs Tested: 10
+Total PASS: 15 / 15
+==================================================================

@@ -1,0 +1,51 @@
+=========================================
+LAB7 WEB-PROXY VERIFICATION REPORT
+Timestamp: Tue Oct 20 08:52:54 AM UTC 2026
+Hostname: web-proxy
+=========================================
+
+--- 1. NETWORK & IDENTITY ---
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    altname enp2s1
+    inet 10.6.0.30/24 brd 10.6.0.255 scope global ens33
+       valid_lft forever preferred_lft forever
+default via 10.6.0.1 dev ens33 proto static 
+10.6.0.0/24 dev ens33 proto kernel scope link src 10.6.0.30 
+Machine ID: c4a616f123394f06a6824a146b57d903
+
+--- 2. PROXY SERVICES STATUS ---
+Squid status: active
+E2Guardian status: active
+ClamAV daemon status: active
+
+--- 3. LISTENING PORTS ---
+tcp   LISTEN 0      256        127.0.0.1:3128       0.0.0.0:*          
+tcp   LISTEN 0      256          0.0.0.0:8080       0.0.0.0:*          
+
+--- 4. FUNCTIONAL PROXY TEST: HARD BLOCK (china.lab7.test) ---
+		<title>E2Guardian - Access Denied</title>
+
+--- 5. FUNCTIONAL PROXY TEST: HARD BLOCK (jobs.lab7.test) ---
+		<title>E2Guardian - Access Denied</title>
+
+--- 6. FUNCTIONAL PROXY TEST: WARNING & BYPASS (weapons.lab7.test) ---
+		<title>E2Guardian - Access Denied</title>
+
+--- 7. SQUID UPSTREAM VERIFICATION (127.0.0.1:3128) ---
+HTTP/1.1 503 Service Unavailable
+Server: squid/6.14
+Mime-Version: 1.0
+Date: Tue, 20 Oct 2026 08:52:55 GMT
+Content-Type: text/html;charset=utf-8
+Content-Length: 3059
+X-Squid-Error: ERR_CONNECT_FAIL 111
+Vary: Accept-Language
+Content-Language: en
+Cache-Status: web-proxy;detail=mismatch
+Via: 1.1 web-proxy (squid/6.14)
+Connection: keep-alive
+
+
+=========================================
+STATUS: WEB-PROXY 10.6.0.30 VERIFICATION COMPLETE
+=========================================
