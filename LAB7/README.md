@@ -5,6 +5,7 @@
 **MSSV:** 1150070050  
 **Lớp:** 11_DH_TMDT  
 **Ngày thực hành:** 20/10/2026
+**Link YT:** https://youtu.be/-h0GHnoliSY
 
 ---
 
