@@ -81,39 +81,15 @@ pfSense nhận interface `em4` với địa chỉ `10.9.0.1/24` để phục v�
 - Có các quy tắc chặn truy cập đến LAN-DOMAIN (`10.6.0.0/24`) và MGMT (`192.168.56.0/24`).
 - Áp dụng quy tắc chặn mặc định đối với lưu lượng khác trên interface thử nghiệm.
 
-![Hình 01 - Interface DNSLAB trên pfSense](img/01_pfsense_dns_interface.png)
-
-*Hình 01. Interface DNSLAB (em4) trên pfSense.*
-
-![Hình 02 - Luật firewall DNSLAB](img/02_pfsense_dns_rules.png)
-
-*Hình 02. Kiểm tra các quy tắc firewall bằng pfctl.*
-
 ### 3.2. Địa chỉ IP và dịch vụ
 
 DNS-SERVER sử dụng `10.9.0.10/24` trên `ens32`, dịch vụ `named.service` đang chạy. VICTIM có địa chỉ `10.9.0.100/24` và `/etc/resolv.conf` trỏ về `10.9.0.10`. Kali có địa chỉ `10.9.0.200/24` trên `eth1`; kiểm tra ICMP tới DNS-SERVER và VICTIM đều nhận 3/3 gói.
-
-![Hình 03 - DNS-SERVER](img/03_dns_server_ip.png)
-
-*Hình 03. Địa chỉ IP, bảng định tuyến và trạng thái BIND9 trên DNS-SERVER.*
-
-![Hình 04 - VICTIM](img/04_victim_ip.png)
-
-*Hình 04. Địa chỉ IP và cấu hình DNS resolver trên VICTIM.*
-
-![Hình 05 - Kali](img/05_kali_ip.png)
-
-*Hình 05. Cấu hình eth1 và kiểm tra kết nối tới các máy trong DNSLAB.*
 
 ### 3.3. Kiểm tra BIND9
 
 Các lệnh `named-checkconf` và `named-checkzone` được sử dụng để kiểm tra cấu hình, zone thuận `lab9.test` và zone nghịch `0.9.10.in-addr.arpa`.
 
 Kết quả trên ảnh cho thấy các zone nạp được và trả về `OK`. Khi kiểm tra zone thuận có cảnh báo liên quan đến tên máy chủ NS bên ngoài zone chưa có bản ghi địa chỉ; cần lưu ý cảnh báo này khi xem xét cấu hình delegation.
-
-![Hình 06 - BIND9 validation](img/06_bind_validation.png)
-
-*Hình 06. Kết quả kiểm tra cấu hình và zone BIND9.*
 
 ## 4. Nội dung và kết quả thực hành
 
@@ -126,10 +102,6 @@ Trước khi thay đổi phân giải tên miền, từ VICTIM thực hiện cá
 
 Các kết quả này là mốc để đối chiếu với những bước sau.
 
-![Hình 07 - DNS baseline](img/07_baseline_dns.png)
-
-*Hình 07. Phân giải DNS và truy cập HTTP hợp lệ trước thử nghiệm.*
-
 ### 4.2. Task 1 – HOSTS file
 
 Trên VICTIM, thêm bản ghi `10.9.0.200 www.lab9.test` vào `/etc/hosts`. Sau khi thay đổi:
@@ -140,27 +112,11 @@ Trên VICTIM, thêm bản ghi `10.9.0.200 www.lab9.test` vào `/etc/hosts`. Sau 
 
 Sự khác biệt xuất hiện vì `getent` sử dụng cơ chế phân giải tên miền của hệ điều hành, có thể ưu tiên `/etc/hosts`; trong khi `dig` gửi truy vấn trực tiếp đến DNS server được chỉ định. Sau thử nghiệm, bản ghi thêm vào HOSTS được xóa và `getent` trở lại địa chỉ hợp lệ.
 
-![Hình 08 - HOSTS redirect](img/08_task1_redirect.png)
-
-*Hình 08. Kiểm tra kết quả phân giải qua HOSTS và trang Web mô phỏng.*
-
-![Hình 09 - DNS gốc và khôi phục HOSTS](img/09_task1_original_dns.png)
-
-*Hình 09. So sánh với truy vấn DNS trực tiếp và khôi phục HOSTS.*
-
 ### 4.3. Task 2 – Direct DNS Spoofing
 
 Ảnh Wireshark ghi nhận truy vấn từ VICTIM (`10.9.0.100`) đến DNS-SERVER (`10.9.0.10`), cùng phản hồi DNS mang Transaction ID `0x7c14`. Trong một lượt kiểm tra trên VICTIM được chụp riêng, truy vấn tên miền `www.external.lab9.test` nhận A record `10.9.0.200` với TTL `120` giây và Query time `80 ms`. Lệnh `curl` tới máy Kali hiển thị nội dung trang Web giả lập.
 
 Hai ảnh minh chứng không nhất thiết thuộc cùng một lượt truy vấn; vì vậy chỉ số TXID và cổng UDP cần đối chiếu với PCAP gốc khi phân tích chi tiết.
-
-![Hình 10 - Wireshark Task 2](img/10_task2_wireshark.png)
-
-*Hình 10. Lưu lượng DNS được ghi lại trong Wireshark ở Task 2.*
-
-![Hình 11 - Kết quả VICTIM Task 2](img/11_task2_victim_result.png)
-
-*Hình 11. VICTIM nhận bản ghi A trỏ về 10.9.0.200 trong lượt kiểm thử.*
 
 ### 4.4. Task 3 – DNS Cache Poisoning
 
@@ -174,14 +130,6 @@ Trong ảnh kiểm tra cache sau thử nghiệm:
 
 Các ảnh này cho thấy resolver đang lưu và trả về bản ghi thay đổi trong khoảng thời gian kiểm tra. Việc xác định chính xác gói phản hồi nào làm cache thay đổi cần dựa vào PCAP Task 3.
 
-![Hình 12 - Wireshark Task 3](img/12_task3_wireshark.png)
-
-*Hình 12. Lưu lượng truy vấn và phản hồi DNS liên quan đến Task 3.*
-
-![Hình 13 - BIND9 cache](img/13_task3_bind_cache.png)
-
-*Hình 13. Kết quả dump cache và truy vấn kiểm tra trên DNS-SERVER.*
-
 ### 4.5. Khôi phục phân giải DNS
 
 Sau khi kết thúc phần thử nghiệm, hệ thống được kiểm tra lại bằng `dig`, `getent` và `curl`. Ảnh kết quả cho thấy:
@@ -190,10 +138,6 @@ Sau khi kết thúc phần thử nghiệm, hệ thống được kiểm tra lạ
 - `www.lab9.test` trỏ về `172.16.6.10`.
 - `getent hosts www.lab9.test` nhận địa chỉ hợp lệ.
 - HTTP tới `172.16.6.10` trả `200 OK`.
-
-![Hình 14 - Khôi phục DNS](img/14_restored_dns.png)
-
-*Hình 14. Kiểm tra DNS và HTTP sau khôi phục.*
 
 ### 4.6. Kiểm tra hardening
 
@@ -204,16 +148,6 @@ Các kiểm tra cuối bài tập trung vào ba thành phần:
 3. **BIND9:** `named-checkconf` trả kết quả hợp lệ; ảnh truy vấn `dig` hiển thị `COOKIE: ... (good)` và file cấu hình không còn tùy chọn `send-cookie no;`.
 
 Trạng thái `COOKIE: ... (good)` xác nhận việc xử lý COOKIE trong truy vấn đã kiểm tra; riêng ảnh này chưa đủ chứng minh chính sách bắt buộc xác thực DNS COOKIE đối với mọi upstream server.
-
-![Hình 15 - Tổng hợp hardening](img/15_hardening_verified.png)
-
-*Hình 15. Kiểm tra promiscuous mode, firewall và cấu hình BIND9 sau thử nghiệm.*
-
-Các ảnh phụ (nếu được nộp riêng):
-
-- [15a – Kali promiscuous mode](img/15a_hardening_kali_promisc.png)
-- [15b – pfSense firewall rules](img/15b_hardening_pfsense_rules.png)
-- [15c – BIND9 DNS COOKIE](img/15c_hardening_bind_cookie.png)
 
 ## 5. Tổng hợp kết quả
 
