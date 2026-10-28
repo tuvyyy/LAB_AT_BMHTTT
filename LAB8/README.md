@@ -169,7 +169,7 @@ Trạng thái `COOKIE: ... (good)` xác nhận việc xử lý COOKIE trong truy
 ```text
 LAB8/
 ├── README.md
-├── 11_DH_TMDT-Lab8_1150070050_NguyenNgocTuVy.docx  (bổ sung khi upload)
+├── LAB8_NguyenNgocTuVy_11TMDT_1150070050.docx
 ├── img/
 │   ├── 01_pfsense_dns_interface.png
 │   ├── 02_pfsense_dns_rules.png
