@@ -1,53 +1,37 @@
-# LAB10 – Remote DNS Cache Poisoning (Mô phỏng trong mạng LAB)
+# LAB10 – REMOTE DNS CACHE POISONING
 
-**Môn học:** An toàn hệ thống thông tin  
+**Môn học:** An toàn bảo mật hệ thống thông tin  
 **Sinh viên:** Nguyễn Ngọc Tú Vy  
 **MSSV:** 1150070050  
 **Lớp:** 11_DH_TMDT  
-**Ngày thực hành:** 03/11/2026  
-**Trạng thái:** Đang chuẩn bị và thu thập kết quả thực nghiệm
+**Giảng viên hướng dẫn:** ThS. Phạm Trọng Huynh
 
-## 1. Mục tiêu
+## Giới thiệu
 
-Tìm hiểu sự khác biệt giữa local DNS spoofing và remote DNS cache poisoning thông qua mạng ảo cô lập; quan sát cơ chế TXID, UDP source port, DNS cache, kiểm tra khôi phục BIND9 và các biện pháp hardening. Các kết quả sẽ chỉ được ghi nhận sau khi có minh chứng thực tế.
+LAB10 tìm hiểu cơ chế đầu độc bộ nhớ đệm DNS từ xa (Remote DNS Cache Poisoning), trên cơ sở môi trường DNS đã triển khai ở LAB8. Trọng tâm của bài là sự khác biệt giữa tấn công trong cùng mạng nội bộ và tình huống máy kiểm thử nằm ở một phân đoạn mạng riêng, không thể trực tiếp quan sát truy vấn DNS của resolver.
 
-## 2. Môi trường dự kiến
+## Môi trường thực hành
 
-- VMware Workstation, pfSense-LAB6, Kali Linux và các máy Ubuntu đã dùng trong LAB trước.
-- DNSLAB: `10.9.0.0/24`; DNS-SERVER dự kiến `10.9.0.10`; VICTIM `10.9.0.100`.
-- ATTACKNET: `10.10.0.0/24`; pfSense `10.10.0.1`; Kali dự kiến `10.10.0.200`.
-- DMZ: `172.16.6.0/24`; AUTH-DNS/APP-TEST dự kiến `172.16.6.20`; DMZ-WEB `172.16.6.10`.
+Bài thực hành sử dụng VMware Workstation, pfSense, Kali Linux và các máy Ubuntu phục vụ phân giải DNS, kiểm thử phía máy khách và dịch vụ web mô phỏng. pfSense phân tách các vùng mạng chính:
 
-> **Lưu ý:** Các IP trên là sơ đồ mục tiêu theo tài liệu giảng viên, **không phải xác nhận hệ thống đã cấu hình hoặc kiểm thử thành công**.
+- **DNSLAB – 10.9.0.0/24:** DNS-SERVER và VICTIM.
+- **ATTACKNET – 10.10.0.0/24:** Kali Linux.
+- **DMZ – 172.16.6.0/24:** Các dịch vụ DNS và web phục vụ kịch bản.
 
-## 3. Cấu trúc lưu trữ
+## Nội dung thực hiện
 
-```text
-LAB10/
-├── README.md
-├── img/          # Ảnh minh chứng thực nghiệm
-├── configs/      # Cấu hình DNS, firewall (đã loại bỏ bí mật)
-├── scripts/      # Script kiểm tra và tài nguyên được phép nộp
-├── logs/         # Nhật ký và đầu ra kiểm tra
-└── pcap/         # Gói tin ghi nhận trong môi trường LAB
-```
+1. Kiểm tra cấu hình mạng, phân vùng ATTACKNET và khả năng kết nối giữa các máy ảo.
+2. Đối chiếu kết quả phân giải DNS và truy cập web ở trạng thái ban đầu.
+3. Quan sát kịch bản mô phỏng Kaminsky, sự thay đổi trong kết quả phân giải và các dấu hiệu liên quan đến DNS cache.
+4. Khôi phục BIND9, rà soát chính sách truy vấn đệ quy và các cơ chế bảo vệ DNS.
 
-Báo cáo Word sẽ được đưa vào thư mục `LAB10/` sau khi hoàn thiện. Các thư mục hiện có `.gitkeep` để GitHub hiển thị trước khi tải tài liệu lên.
+Các nhận xét, kết quả quan sát và giới hạn kiểm chứng được trình bày cụ thể trong báo cáo thực hành.
 
-## 4. Trạng thái thực nghiệm
+## Tài liệu nộp
 
-| Hạng mục | Trạng thái |
+| Thành phần | Nội dung |
 |---|---|
-| Đối chiếu mô hình và tài liệu | Đang thực hiện |
-| Cấu hình và kiểm tra kết nối ATTACKNET | Chưa xác minh |
-| DNS baseline | Chưa xác minh |
-| Các thử nghiệm trong phạm vi LAB | Chưa xác minh |
-| Khôi phục, hardening | Chưa xác minh |
-| Ảnh, PCAP, log | Chưa tải lên |
-| Báo cáo Word | Chưa tải lên |
+| [Báo cáo LAB10](11_DH_TMDT-Lab10_1150070050_NguyenNgocTuVy.docx) | Mô hình mạng, các bước thực hành, kết quả, phân tích và câu hỏi cuối bài |
+| `img/` | 13 hình minh chứng và sơ đồ sử dụng trong báo cáo |
 
-**Quy ước:** Chỉ ghi PASS khi có kết quả kiểm tra thực tế; không dùng ảnh hoặc log giả.
-
-## 5. Liên hệ LAB trước
-
-Kế thừa mạng VMware và mô hình DNS mô tả tại [LAB8](../LAB8/README.md); không thay đổi nội dung các LAB trước.
+README chỉ giới thiệu khái quát bài thực hành; phần trình bày chi tiết và đối chiếu minh chứng nằm trong **báo cáo Word**.
