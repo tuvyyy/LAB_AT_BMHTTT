@@ -2,8 +2,7 @@
 -- LƯU Ý BẢO MẬT: Script sử dụng SQLCMD Parameter $(SQL_PASSWORD) để tránh lưu mật khẩu trực tiếp trong file nộp bài.
 -- Khi chạy bằng sqlcmd, dùng cú pháp:
 -- sqlcmd -S .\SQLEXPRESS -E -i 02_Tao_Login_MAU.sql -v SQL_PASSWORD="<MatKhauCuaBan>"
--- Khi chạy bằng SSMS, hãy bật Query -> SQLCMD Mode trước khi bấm Execute (F5),
--- hoặc thay thế chuỗi $(SQL_PASSWORD) bằng mật khẩu cá nhân của bạn (ví dụ: LabUser@2026).
+-- Khi chạy bằng SSMS, hãy bật Query -> SQLCMD Mode và truyền giá trị biến SQL_PASSWORD trước khi bấm Execute (F5).
 
 :setvar SQL_PASSWORD "THAY_BANG_MAT_KHAU_CUA_BAN"
 
