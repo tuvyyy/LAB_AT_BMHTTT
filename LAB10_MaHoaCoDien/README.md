@@ -16,7 +16,7 @@ Xây dựng ứng dụng Java Swing với sáu thuật toán **Caesar, Vigenère
 
 ## 3. Kiểm thử
 
-Bộ kiểm thử JUnit nằm tại `LAB1_TuLam/src/test/java/week_01/CipherTest.java`. Các bộ dữ liệu chuẩn cần đối chiếu:
+Bộ kiểm thử JUnit nằm tại `LAB1/src/test/java/week_01/CipherTest.java`. Các bộ dữ liệu chuẩn cần đối chiếu:
 
 | Thuật toán | Bản rõ | Khóa | Bản mã mong đợi |
 |---|---|---|---|
@@ -35,7 +35,7 @@ Báo cáo Word trình bày kết quả, nhận xét và minh chứng chi tiết.
 LAB10_MaHoaCoDien/
 ├── README.md
 ├── TH1_LAB10_NguyenNgocTuVy_1150070050.docx
-├── LAB1_TuLam/
+├── LAB1/
 │   ├── pom.xml
 │   └── src/
 │       ├── main/java/week_01/   # Mã nguồn và các tệp .form
@@ -48,7 +48,7 @@ LAB10_MaHoaCoDien/
 
 ## 5. Mở và chạy chương trình
 
-1. Mở thư mục `LAB1_TuLam` bằng **File → Open Project** trong Apache NetBeans.
+1. Mở thư mục `LAB1` bằng **File → Open Project** trong Apache NetBeans.
 2. Thiết lập Java Platform của project là **JDK 17**; Maven sẽ tải các dependency trong `pom.xml`.
 3. Dùng **Clean and Build** để biên dịch và chạy bộ kiểm thử, sau đó nhấn **F6** để mở `week_01.frm_Menu`.
 4. Nếu cần chức năng lưu lịch sử, tạo cơ sở dữ liệu bằng các script tại `03_SQL_SERVER/`, cấu hình SQL Server và nhập thông tin kết nối trong form của ứng dụng.
