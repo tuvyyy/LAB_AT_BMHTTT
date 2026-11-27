@@ -1,0 +1,25 @@
+# Maven and IDE build files
+target/
+*.class
+nbproject/private/
+.idea/
+.vscode/
+
+# Local configuration and credentials
+.env
+.env.*
+*.local.properties
+*.log
+
+# Local cryptographic key files
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Temporary files
+~$*
+*.tmp
+Thumbs.db
+.DS_Store
